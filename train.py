@@ -10,7 +10,7 @@ import pandas as pd
 from azureml.core.run import Run
 from azureml.data.dataset_factory import TabularDatasetFactory
 
-# TODO: Create TabularDataset using TabularDatasetFactory
+# Create TabularDataset using TabularDatasetFactory
 # Data is located at:
 url_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
 ds = TabularDatasetFactory.from_delimited_files(url_path)

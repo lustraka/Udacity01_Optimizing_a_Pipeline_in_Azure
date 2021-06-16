@@ -27,6 +27,7 @@ We use a bank marketing dataset containing selected features related to a Portug
 
 ## Future work
 **What are some areas of improvement for future experiments? Why might these improvements help the model?**
+
 `FixMe`: Data leakeage and purpose of ML solution: planning campaing versus continuous support during a campaign?
 
 ## Proof of cluster clean up

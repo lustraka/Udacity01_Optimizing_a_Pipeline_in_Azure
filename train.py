@@ -12,44 +12,50 @@ from azureml.data.dataset_factory import TabularDatasetFactory
 
 # TODO: Create TabularDataset using TabularDatasetFactory
 # Data is located at:
-# "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
+url_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
+ds = TabularDatasetFactory.from_delimited_files(url_path)
 
-ds = ### YOUR CODE HERE ###
+def get_X_y(ds, encode_cat='onehot'):
+  """Prepare features and a target in line with exploratory data analysis.
+  For `encode_cat` use either 'onehot' or 'label'."""
+  
+  df = ds.to_pandas_dataframe()
 
-x, y = clean_data(ds)
+  # Separate and encode the target
+  y = df.pop('y').apply(lambda s: 1 if s == 'yes' else 0)
 
-# TODO: Split data into train and test sets.
+  # Binarize 'pdays' feature, as it doesn't matter how many days passed
+  # due to prevalence of 'no previous contact' cases (31728)
+  df['pdays'] = df['pdays'].apply(lambda i: 0 if i == 999 else 1)
 
-### YOUR CODE HERE ###a
+  # Drop a potential data leakage columns including
+  # high correlated 'duration (of a call)' (coef 0.41).
+  # Features related with the last contact of the current
+  # campaign are not know while planning a new campaign!
+  for col in ['contact', 'month', 'day_of_week', 'duration', 'campaign']:
+    df.drop(col, axis=1, inplace=True)
+
+  # Drop an uninformative column 'default'
+  # which has only 3 'yes'.
+  df.drop('default', axis=1, inplace=True)
+
+  # Encode the non-numeric columns
+  for col in df.select_dtypes('object').columns:
+    if encode_cat == 'onehot':
+      df = df.join(pd.get_dummies(df[col], prefix=col))
+      df.drop(col, axis=1, inplace=True)
+    else:  # Label encoding
+      df[col], _ = df[col].factorize()
+
+  # Return features and the target
+  return df, y
+
+x, y = get_X_y(ds)
+
+# Split data into train and test sets.
+x_train, x_test, y_train, y_test = train_test_split(x, y)
 
 run = Run.get_context()
-
-def clean_data(data):
-    # Dict for cleaning data
-    months = {"jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12}
-    weekdays = {"mon":1, "tue":2, "wed":3, "thu":4, "fri":5, "sat":6, "sun":7}
-
-    # Clean and one hot encode data
-    x_df = data.to_pandas_dataframe().dropna()
-    jobs = pd.get_dummies(x_df.job, prefix="job")
-    x_df.drop("job", inplace=True, axis=1)
-    x_df = x_df.join(jobs)
-    x_df["marital"] = x_df.marital.apply(lambda s: 1 if s == "married" else 0)
-    x_df["default"] = x_df.default.apply(lambda s: 1 if s == "yes" else 0)
-    x_df["housing"] = x_df.housing.apply(lambda s: 1 if s == "yes" else 0)
-    x_df["loan"] = x_df.loan.apply(lambda s: 1 if s == "yes" else 0)
-    contact = pd.get_dummies(x_df.contact, prefix="contact")
-    x_df.drop("contact", inplace=True, axis=1)
-    x_df = x_df.join(contact)
-    education = pd.get_dummies(x_df.education, prefix="education")
-    x_df.drop("education", inplace=True, axis=1)
-    x_df = x_df.join(education)
-    x_df["month"] = x_df.month.map(months)
-    x_df["day_of_week"] = x_df.day_of_week.map(weekdays)
-    x_df["poutcome"] = x_df.poutcome.apply(lambda s: 1 if s == "success" else 0)
-
-    y_df = x_df.pop("y").apply(lambda s: 1 if s == "yes" else 0)
-    
 
 def main():
     # Add arguments to script

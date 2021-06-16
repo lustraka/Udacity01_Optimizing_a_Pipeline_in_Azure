@@ -6,7 +6,9 @@ In this project, we build and optimize an Azure ML pipeline using the Python SDK
 This model is then compared to an Azure AutoML run.
 
 ## Summary
-**In 1-2 sentences, explain the problem statement: e.g "This dataset contains data about... we seek to predict..."**
+We use a bank marketing dataset containing selected features related to a Portuguese retail bank's telemarketing campaings
+(telemarketing attributes, product details, client information) enriched with social and economic influence features. We seek to 
+**predict the success of telemarketing calls** for selling bank long-term deposits.
 
 **In 1-2 sentences, explain the solution: e.g. "The best performing model was a ..."**
 
@@ -29,3 +31,7 @@ This model is then compared to an Azure AutoML run.
 ## Proof of cluster clean up
 **If you did not delete your compute cluster in the code, please complete this section. Otherwise, delete this section.**
 **Image of cluster marked for deletion**
+
+## References
++ [Bank Marketing Data Set](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
++ [\[Moro et al., 2014\]](https://core.ac.uk/download/pdf/55631291.pdf) S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014 (preprint dated 2014-02-19)

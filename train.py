@@ -17,7 +17,7 @@ ds = TabularDatasetFactory.from_delimited_files(url_path)
 
 def get_X_y(ds, encode_cat='onehot'):
   """Prepare features and a target in line with exploratory data analysis.
-  For `encode_cat` use either 'onehot' or 'label'."""
+  For `encode_cat` parameter use either 'onehot' or 'label'."""
   
   df = ds.to_pandas_dataframe()
 
@@ -31,7 +31,7 @@ def get_X_y(ds, encode_cat='onehot'):
   # Drop a potential data leakage columns including
   # high correlated 'duration (of a call)' (coef 0.41).
   # Features related with the last contact of the current
-  # campaign are not know while planning a new campaign!
+  # campaign are not known when planning a new campaign!
   for col in ['contact', 'month', 'day_of_week', 'duration', 'campaign']:
     df.drop(col, axis=1, inplace=True)
 

@@ -55,7 +55,6 @@ x, y = get_X_y(ds)
 # Split data into train and test sets.
 x_train, x_test, y_train, y_test = train_test_split(x, y)
 
-run = Run.get_context()
 
 def main():
     # Add arguments to script
@@ -72,7 +71,8 @@ def main():
     model = LogisticRegression(C=args.C, max_iter=args.max_iter).fit(x_train, y_train)
 
     accuracy = model.score(x_test, y_test)
-    run.log("Accuracy", np.float(accuracy))
+    run = Run.get_context()
+    run.log("accuracy", np.float(accuracy))
     
     joblib.dump(model, 'model.joblib')
 

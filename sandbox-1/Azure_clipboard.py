@@ -42,7 +42,7 @@ cpu_cluster.wait_for_completion(show_output=True)
 # cpu_cluster.delete()
 
 # ------------------------------------------------------------------------------------
-# 6. Automated ML and Hzperparameter Tunning > 2. Hyperparameter Tuning with HyperDrive
+# 6. Automated ML and Hyperparameter Tunning > 2. Hyperparameter Tuning with HyperDrive
 # Controlling HyperDrive with the SDK
 from azureml.train.hyperdrive import BayesianParameterSampling
 from azureml.train.hyperdrive import uniform, choice
@@ -91,7 +91,7 @@ policy = BanditPolicy(evaluation_interval=2, slack_factor=0.1)
 if "training" not in os.listdir():
     os.mkdir("./training")
 
-# DEPRECATED. Create a SKLearn estimator for use with train.py
+# DEPRECATED. Create a SKLearn estimator for use with train.py > Instead:
 # Create a ScriptRunConfig object to specify the configuration details of your training job
 
 from azureml.core import ScriptRunConfig
@@ -102,4 +102,36 @@ est = ScriptRunConfig(source_directory='.',
                       environment=sklearn_env)
 
 # Create a HyperDriveConfig using the estimator, hyperparameter sampler, and policy.
-hyperdrive_config = ### YOUR CODE HERE ###
+hyperdrive_config = HyperDriveConfig(estimator=est,
+                                    hyperparameter_sampling=ps,
+                                    policy=policy,
+                                    primary_metric_name='Accuracy',
+                                    primary_metric_goal=PrimaryMetricGoal.MAXIMIZE,
+                                    max_total_runs=20,
+                                    max_concurrent_runs=4,
+                                    max_duration_minutes=30)
+
+# ------------------------------------------------------------------------------------
+# Submit your hyperdrive run to the experiment and show run details with the widget.
+hdr = exp.submit(config=hyperdrive_config)
+RunDetails(hdr).show()
+hdr.wait_for_completion(show_output=True)
+
+# ------------------------------------------------------------------------------------
+# import joblib - delete, shall be in script!
+# Get your best run and save the model from that run.
+best_run = hdr.get_best_run_by_primary_metric()
+best_run_metrics = best_run.get_metrics()
+parameter_values = best_run.get_details()['runDefinition']['Arguments']
+
+print('Best Run Id: ', best_run.id)
+print('\n Accuracy:', best_run_metrics['accuracy'])
+print('\n learning rate:', parameter_values[3])
+print('\n keep probability:', parameter_values[5])
+print('\n batch size:', parameter_values[7])
+
+from azureml.core import Model
+from azureml.core.resource_configuration import ResourceConfiguration
+
+model = run.register_model(model_name='sklearn-logistic-regression', 
+                           model_path='outputs/model.joblib'))

@@ -123,8 +123,10 @@ ds = TabularDatasetFactory.from_delimited_files(url_path)
 
 from train import get_X_y
 
-# Use the clean_data function to clean your data.
+# As parameter X,y are deprecated, concatenate them to one dataframe.
+import pandas as pd
 x, y = get_X_y(ds)
+training_data = pd.concat([x,y], axis=1)
 
 from azureml.train.automl import AutoMLConfig
 
@@ -134,15 +136,15 @@ from azureml.train.automl import AutoMLConfig
 # Azure tenant, which will incur personal costs.
 automl_config = AutoMLConfig(
     experiment_timeout_minutes=30,
-    task=,
-    primary_metric=,
-    training_data=,
-    label_column_name=,
-    n_cross_validations=)
+    task='classification',
+    primary_metric='AUC_weighted',
+    training_data=training_data,
+    label_column_name='y',
+    n_cross_validations=5)
 
 # Submit your automl run
-
-### YOUR CODE HERE ###
+expaml = Experiment(workspace=ws, name="udacity-project-automl")
+runaml = expaml.submit(config=automl_config, show_output=True)
 
 # Retrieve and save your best automl model.
 

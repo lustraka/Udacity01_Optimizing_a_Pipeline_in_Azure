@@ -134,13 +134,22 @@ from azureml.train.automl import AutoMLConfig
 # NOTE: DO NOT CHANGE THE experiment_timeout_minutes PARAMETER OR YOUR INSTANCE WILL TIME OUT.
 # If you wish to run the experiment longer, you will need to run this notebook in your own
 # Azure tenant, which will incur personal costs.
+automl_settings = {
+    'experiment_timeout_minutes' : 30,
+    'n_cross_validations' : 3,
+    'enable_early_stopping' : True,
+    'iteration_timeout_minutes' : 5,
+    'max_concurrent_iterations' : 4,
+    'max_cores_per_iteration' : -1
+}
+
 automl_config = AutoMLConfig(
-    experiment_timeout_minutes=30,
     task='classification',
     primary_metric='AUC_weighted',
+    compute_target=cpu_cluster,
     training_data=training_data,
-    label_column_name='y',
-    n_cross_validations=5)
+    label_column_name='y'
+    **automl_settings)
 
 # Submit your automl run
 expaml = Experiment(workspace=ws, name="udacity-project-automl")

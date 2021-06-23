@@ -157,7 +157,17 @@ runaml = expaml.submit(config=automl_config, show_output=True)
 
 # Retrieve and save your best automl model.
 
-### YOUR CODE HERE ###
+best_aml_run = runaml.get_best_run_by_primary_metric()
+best_aml_run_metrics = best_aml_run.get_metrics()
+
+print('Best Run Id: ', best_aml_run.id)
+
+best_aml_run.download_file(best_aml_run.get_file_names()[-1], output_file_path='./outputs/')
+
+aml_model = Model.register(ws, model_path='outputs/model.joblib', model_name='best-aml-model', tags=best_aml_run_metrics)
+
+print(aml_model.name, aml_model.id, aml_model.version, sep='\t')
+
 
 # Delete() is used to deprovision and delete the AmlCompute target. 
 

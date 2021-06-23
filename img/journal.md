@@ -103,7 +103,39 @@
 + Accuracy: 0.8982762806506434
 
 ## Details of a AutoML model
+**Data transformation**
+{
+    "class_name": "MaxAbsScaler",
+    "module": "sklearn.preprocessing",
+    "param_args": [],
+    "param_kwargs": {},
+    "prepared_kwargs": {},
+    "spec_class": "preproc"
+}
 
+**Training algorithm**
+{
+    "class_name": "LightGBMClassifier",
+    "module": "automl.client.core.common.model_wrappers",
+    "param_args": [],
+    "param_kwargs": {
+        "boosting_type": "goss",
+        "colsample_bytree": 0.99,
+        "learning_rate": 0.08947473684210526,
+        "max_bin": 60,
+        "max_depth": 3,
+        "min_child_weight": 1,
+        "min_data_in_leaf": 0.010353793103448278,
+        "min_split_gain": 0.3684210526315789,
+        "n_estimators": 400,
+        "num_leaves": 92,
+        "reg_alpha": 0.21052631578947367,
+        "reg_lambda": 0.9473684210526315,
+        "subsample": 1
+    },
+    "prepared_kwargs": {},
+    "spec_class": "sklearn"
+}
 ## ConfigException: ConfigException
 ConfigException: ConfigException:
 	Message: Input of type '<class 'pandas.core.frame.DataFrame'>' is not supported. Supported types: [azureml.data.tabular_dataset.TabularDataset]

@@ -58,7 +58,7 @@ import os
 ps = RandomParameterSampling(
     {
     'C': uniform(0.01, 100.0), # For regularization
-    'max_iter': choice(500, 1000, 2000) # Max number of epochs
+    'max_iter': choice(500, 1000, 1500, 2000, 2500) # Max number of epochs
     }
 )
 
@@ -121,12 +121,16 @@ from azureml.data.dataset_factory import TabularDatasetFactory
 url_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
 ds = TabularDatasetFactory.from_delimited_files(url_path)
 
-from train import get_X_y
-
+#########################
+# Not use due to configuration arror of AutoML config which accepts only datasets (no DataFrame ???)
+#from train import get_X_y
+#x, y = get_X_y(ds)
+#
 # As parameter X,y are deprecated, concatenate them to one dataframe.
-import pandas as pd
-x, y = get_X_y(ds)
-training_data = pd.concat([x,y], axis=1)
+#import pandas as pd
+#training_data = pd.concat([x,y], axis=1)
+#training_data.info()
+#########################
 
 from azureml.train.automl import AutoMLConfig
 
@@ -147,14 +151,32 @@ automl_config = AutoMLConfig(
     task='classification',
     primary_metric='AUC_weighted',
     compute_target=cpu_cluster,
-    training_data=training_data,
-    label_column_name='y'
+    training_data=ds, # instead of training_data due to configuration error,
+    label_column_name='y',
     **automl_settings)
 
 # Submit your automl run
 expaml = Experiment(workspace=ws, name="udacity-project-automl")
 runaml = expaml.submit(config=automl_config, show_output=True)
 
+# Retrieve and save your best automl model.
+best_aml_run = runaml.get_best_child()
+best_aml_run_metrics = best_aml_run.get_metrics()
+
+print('Best Run Id: ', best_aml_run.id)
+
+best_aml_run.get_file_names()[-4]
+
+best_aml_run.download_file(best_aml_run.get_file_names()[-4], output_file_path='./outputs/')
+aml_model = Model.register(ws, model_path='outputs/model.pkl', model_name='best-aml-model', tags=best_aml_run_metrics)
+
+print(aml_model.name, aml_model.id, aml_model.version, sep='\t')
+
+with open('best_aml_run_metrics.txt', 'w') as file:
+    file.write(str(best_aml_run_metrics))
+with open('best_aml_run_details.txt', 'w') as file:
+    file.write(str(best_aml_run.get_details()))
+#--------------
 # Retrieve and save your best automl model.
 
 best_aml_run = runaml.get_best_run_by_primary_metric()
@@ -163,7 +185,6 @@ best_aml_run_metrics = best_aml_run.get_metrics()
 print('Best Run Id: ', best_aml_run.id)
 
 best_aml_run.download_file(best_aml_run.get_file_names()[-1], output_file_path='./outputs/')
-
 aml_model = Model.register(ws, model_path='outputs/model.joblib', model_name='best-aml-model', tags=best_aml_run_metrics)
 
 print(aml_model.name, aml_model.id, aml_model.version, sep='\t')

@@ -15,11 +15,15 @@ from azureml.data.dataset_factory import TabularDatasetFactory
 url_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
 ds = TabularDatasetFactory.from_delimited_files(url_path)
 
-def get_X_y(ds, encode_cat='onehot'):
+def get_X_y(ds, encode_cat='onehot', context='hdr'):
   """Prepare features and a target in line with exploratory data analysis.
-  For `encode_cat` parameter use either 'onehot' or 'label'."""
+  For `encode_cat` parameter use either 'onehot' or 'label'.
+  For `context` parameter use eiter 'hdr' or 'aml'."""
   
-  df = ds.to_pandas_dataframe()
+  if context == 'hdr':
+    df = ds.to_pandas_dataframe()
+  else:
+    df = ds.copy() # in 'aml' context type(ds) == pd.DataFrame()
 
   # Separate and encode the target
   y = df.pop('y').apply(lambda s: 1 if s == 'yes' else 0)
@@ -39,16 +43,22 @@ def get_X_y(ds, encode_cat='onehot'):
   # which has only 3 'yes'.
   df.drop('default', axis=1, inplace=True)
 
-  # Encode the non-numeric columns
-  for col in df.select_dtypes('object').columns:
-    if encode_cat == 'onehot':
-      df = df.join(pd.get_dummies(df[col], prefix=col))
-      df.drop(col, axis=1, inplace=True)
-    else:  # Label encoding
-      df[col], _ = df[col].factorize()
+  # Encode the non-numeric columns in the 'hdr' context
+  if context == 'hdr':
+    for col in df.select_dtypes('object').columns:
+      if encode_cat == 'onehot':
+        df = df.join(pd.get_dummies(df[col], prefix=col))
+        df.drop(col, axis=1, inplace=True)
+      else:  # Label encoding
+        df[col], _ = df[col].factorize()
 
-  # Return features and the target
-  return df, y
+    # Return features and the target
+    return df, y
+  
+  else: # for 'aml' context
+    return pd.concat([df, y], axis=1)
+     
+    
 
 x, y = get_X_y(ds)
 

@@ -1,12 +1,10 @@
-from sklearn.linear_model import LogisticRegression
 import argparse
 import os
+import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_squared_error
 import joblib
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
-import pandas as pd
+from sklearn.linear_model import LogisticRegression
 from azureml.core.run import Run
 from azureml.data.dataset_factory import TabularDatasetFactory
 
@@ -15,12 +13,12 @@ from azureml.data.dataset_factory import TabularDatasetFactory
 url_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
 ds = TabularDatasetFactory.from_delimited_files(url_path)
 
-def get_X_y(ds, encode_cat='onehot', context='hdr'):
+def get_X_y(ds, encode_cat='onehot', context='hpd'):
   """Prepare features and a target in line with exploratory data analysis.
   For `encode_cat` parameter use either 'onehot' or 'label'.
-  For `context` parameter use eiter 'hdr' or 'aml'."""
+  For `context` parameter use either 'hpd' or 'aml'."""
   
-  if context == 'hdr':
+  if context == 'hpd':
     df = ds.to_pandas_dataframe()
   else:
     df = ds.copy() # in 'aml' context type(ds) == pd.DataFrame()
@@ -43,8 +41,8 @@ def get_X_y(ds, encode_cat='onehot', context='hdr'):
   # which has only 3 'yes'.
   df.drop('default', axis=1, inplace=True)
 
-  # Encode the non-numeric columns in the 'hdr' context
-  if context == 'hdr':
+  # Encode the non-numeric columns in the 'hpd' context
+  if context == 'hpd':
     for col in df.select_dtypes('object').columns:
       if encode_cat == 'onehot':
         df = df.join(pd.get_dummies(df[col], prefix=col))

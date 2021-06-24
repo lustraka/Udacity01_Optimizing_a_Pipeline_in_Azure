@@ -115,21 +115,28 @@ print(model.name, model.id, model.version, sep='\t')
 
 #########################################################
 from azureml.data.dataset_factory import TabularDatasetFactory
+import pandas as pd
+from train import get_X_y
 
 # Create TabularDataset using TabularDatasetFactory
 # Data is available at: 
 url_path = "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
-ds = TabularDatasetFactory.from_delimited_files(url_path)
+ds = pd.read_csv(url_path)
 
-#########################
-# Not use due to configuration arror of AutoML config which accepts only datasets (no DataFrame ???)
-#from train import get_X_y
-#x, y = get_X_y(ds)
-#
-# As parameter X,y are deprecated, concatenate them to one dataframe.
-#import pandas as pd
-#training_data = pd.concat([x,y], axis=1)
-#training_data.info()
+# Transform data in line with EDA
+ds = get_X_y(ds, context='aml')
+
+# Store dataset in the CSV format
+os.makedirs('./data', exist_ok=True)
+with open('./data/data.csv', 'w') as writer:
+    ds.to_csv(writer, index=False)
+
+# Upload data to AzureBlobDatastore
+blob_store = ws.get_default_datastore()
+blob_store.upload(src_dir='data', target_path='data', overwrite=True)
+
+# Create final dataset for AutoML
+training_data = TabularDatasetFactory.from_delimited_files(blob_store.path('data/data.csv'))
 #########################
 
 from azureml.train.automl import AutoMLConfig

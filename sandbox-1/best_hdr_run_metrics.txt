@@ -1,0 +1,1 @@
+{'Regularization Strength:': 47.00488472299381, 'Max iterations:': 1000, 'Accuracy': 0.8982762806506434}

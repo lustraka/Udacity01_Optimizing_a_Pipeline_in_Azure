@@ -1,3 +1,12 @@
+# Notes 2021-06-24
+TabularDatasetFactory.from_delimited_files() requires an absolute path.
+Upload a dataframe as a dataset in AML:
++ Write a dataframe to a local file (DataFrame.to_csv)
++ Upload a local file to a Workspace.get_default_datastore().upload()
+  + type(blob_store) == AzureBlobStore
++ Create a dataset referencing to the cloud location
+  + AzureBlobStore.path()
+
 # Notes 2021-06-23
 ## Details of a HyperDrive model
 `{'runId': 'HD_cad5df1a-3e63-40b9-82de-7100cc5be99b_5',

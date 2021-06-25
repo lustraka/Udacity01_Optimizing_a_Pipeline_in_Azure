@@ -50,14 +50,14 @@ Figure x: Pipeline architecture
 ![AutoML-ROC (click to see the image)](img/AML-AutoML-ROC.png?raw=true)
 ![(click to see the image)](img/?raw=true)
 
-<--
+<!--
 @startuml
 :Connect to Bank Telemarketing Data
 20 columns<
 :Delete 6 columns
 (to prevent data leakage and uninformative inputs);
 :Prepare data
-<i>train.get_X_y();
+<i>train.get_X_y()</i>;
 fork
 :HyperDrive pipeline|
 split

@@ -40,3 +40,4 @@ We use a bank marketing dataset containing selected features related to a Portug
 + [Train scikit-learn models at scale with Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-scikit-learn?view=azure-ml-py)
 
 ![AutoML-ROC](https://github.com/lustraka/nd00333_AZMLND_Optimizing_a_Pipeline_in_Azure-Starter_Files/blob/master/img/AML-AutoML-ROC.png)
+[[https://github.com/lustraka/nd00333_AZMLND_Optimizing_a_Pipeline_in_Azure-Starter_Files/blob/master/img/AML-AutoML-ROC.png]]

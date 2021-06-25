@@ -39,8 +39,8 @@ We use a bank marketing dataset containing selected features related to a Portug
 + [\[Moro et al., 2014\]](https://core.ac.uk/download/pdf/55631291.pdf) S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014 (preprint dated 2014-02-19)
 + [Train scikit-learn models at scale with Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-scikit-learn?view=azure-ml-py)
 
-![AutoML-ROC](https://drive.google.com/file/d/1Ds8JOCQZhZDTC-u2ZPZy5WZUKa9ZLpaT/view?usp=sharing)
+![ AutoML-ROC (click to see the image)](img/AML-AutoML-ROC.png?raw=true)
 
-![AutoML-ROC](img/AML-AutoML-ROC.png?raw=true)
+![ AutoML-ROC (click to see the image)](img/AML-AutoML-ROC.png)
 
-![AutoML-ROC](https://drive.google.com/file/d/1Ds8JOCQZhZDTC-u2ZPZy5WZUKa9ZLpaT/view?usp=sharing?raw=true)
+

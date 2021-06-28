@@ -55,7 +55,7 @@ Figure 6: AutoML ROC
 ## Pipeline comparison
 Both the HyperDrive and AutoML pipelines have their pros and cons. The HyperDrive model offers greater control over the model selection and the hyperparameter space definition. The AutoML pipeline is easier to set up (see Figure 7) and offers greater range of models to try. Direct comparison of the pipelines is difficult (see Figure 1), as they were optimized for different metrics.
 
-![Pipeline Architecture](http://www.plantuml.com/plantuml/png/NP2_pjDG3CLtFuN7xri0CJ0aLLMWI0mW8M1WgzpKIKtkdojVtqgH-l3SfBHgkzg_StnyDjb8hNW7pUSO0dU65l4JXH5_isDFEh99671BHl3-7NRH5H_o2ffjtHlZX-i8NgeoAPyu61ugZevff86HmW5BaD17zMHoOfIGYkNN5feVoecK5m6iP6rA4juCRBi_k-dbTVLMrYrKuGZDrocnRdNM9qdi9F2vnZx6c1a9EqSvIo-irVPNSc9enuln_DDYl4GnpeQPhOKyKpFCdVGJr23asLWXaq-EzJ-1D5JjZKCcTHDaYodLQY159ztqnDOsUncACYo7P-vltBV0DS02tY5uzvcMCCSlUo_sF5zwk1xuM2n-__RGnCtlidlmUfZD8IwTVZcHArRjEHTdUGtDJnua6-jIdey7TcVOL47nxXy0)
+![Pipeline Architecture](http://www.plantuml.com/plantuml/png/NP51RnD138Nl_XK-jXT073XiegX0Yf00gQ8Sk5NknjcOp7f67a-aHUM_CvaqqcfF8zdVytjwSvUTpCiOeFiSLRbtz8YVI8_uYmEFP4TsqG6tv0Jlts4VGnarhw7RrhqpVhYEuAOga_69rN5NSGnCHneOINTOL7GVRIIN4wDeAfvlLz0z62SoRW9OoyQDHDyCx4-_dwQRs_LRsQoW2e_GVPqIszRE-YI9WoY_GFT5b8ByPIHisdFOt9ia_mSv1N7e7iyF-k7YWXuH6jg2EMV7pBwwq4X3tTGs3Z5cHY3i0-KiUs5R8FUQYrKan66ehYlWUguHhKmNBOpLvM7oGrHyt7wR9U9UzXCaCXhPsI3JcCBIuieXauK9iiUKgXEa6AIVbecZxcKend3j0Vx4vsMg2uApBgtegZgLvr5yEM_DNmq-5ey_li-wdzrxtSrlpMSjnEKNxqyKYZCQvn8yRw3xoODaPsi_DCOTXnUugu8oXly0)
 
 Figure 7: Pipeline architecture
 
@@ -89,8 +89,18 @@ The compute cluster deleted using SDK (see [udacity-project.ipynb](https://githu
 <i>train.get_X_y()</i>;
 fork
 :HyperDrive pipeline|
-:Choose a classifier;
-:Split the data to train and test set;
+:Finalize a training script}
+split
+:Split the data to 
+train and test set;
+split again
+:Choose 
+a classifier;
+split again
+:Ensure 
+logging;
+end split
+:Continue in Python SDK}
 split
 :Specify
 parameter

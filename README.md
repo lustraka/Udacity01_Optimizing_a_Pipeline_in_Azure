@@ -10,14 +10,18 @@ We use a bank marketing dataset containing selected features related to a Portug
 (telemarketing attributes, product details, client information) enriched with social and economic influence features. We seek to 
 **predict the success of telemarketing calls** for selling bank long-term deposits.
 
-The standard Scikit-learn Logistic Regression model (LR) reached accuracy 0.898, which was higher then accuracy of the AutoML (0.739), as its hyperparameters was optimized for accuracy. On the other side, the AutoML showed AUC 0.737, which is higher then AUC of the LR model (0.583). Because AUC is more relevant metrics for classification tasks, we can conclude, that the best performing model was provided by the AutoML.
+The standard Scikit-learn Logistic Regression model reached accuracy 0.898, which was higher then accuracy of the AutoML model (0.739), as its hyperparameters was optimized for accuracy. On the other side, the AutoML model showed AUC 0.737, which is higher then AUC of the Logistic Regression model (0.583). As AUC is more relevant metrics for classification tasks, we can choose the AutoML model as more appropriate.
 
-![Model Metrics (click to see the image)](img/AML-Results.png?raw=true)
+![Models' Metrics (click to see the image)](img/AML-Results.png?raw=true)
 
 Figure 1: Accuracy and AUC of two models
 
 ## Scikit-learn Pipeline
 **Explain the pipeline architecture, including data, hyperparameter tuning, and classification algorithm.**
+
+The Scikit-learn pipeline uses the Logistic Regression model, which, despite its name, is a linear model for classification rather then regression. The learning dataset is a subset of the bank marketing dataset (see References below). An exploratory data analysis showed the strong correlation between the feature "duration" and the target. To prevent data leakage, features related with the last contact in the current campaign, including "duration", was deleted, as in case of preparing a new campaing this features will not be available. This decision means worse performance of the model during training, but possibly better performance in production.
+
+The script for hyperparametr tuning prepares the data (function /get_X_y()/ instead of /clean_data()/ in the starter file), 
 
 ![HyperDrive Accuracy (click to see the image)](img/AML-HyperDrive-Acuracy-2.png?raw=true)
 
@@ -25,7 +29,8 @@ Figure x: HyperDrive optimizing for accuracy
 
 ![LR ROC Curve (click to see the image)](img/AML-ROC-LR.png?raw=true)
 
-Figure x: ROC curve of the Logistic Regression
+Figure 2: ROC curve of the Logistic Regression
+
 
 **What are the benefits of the parameter sampler you chose?**
 **What are the benefits of the early stopping policy you chose?**
